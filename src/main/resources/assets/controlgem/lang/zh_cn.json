@@ -1,5 +1,14 @@
 {
-  "block.controlgem.control_gem_ore": "控制水晶矿",
+  "block.controlgem.control_crystal_ore": "控制矿",
+  "item.controlgem.control_crystal": "控制晶体",
+  "itemGroup.controlgem.general": "控制水晶",
   "item.controlgem.control_gem": "控制水晶",
-  "itemGroup.controlgem.general": "控制水晶"
+  "item.controlgem.inferior_control_gem": "低级控制水晶",
+  "item.controlgem.basic_control_gem": "§8基础控制水晶",
+  "item.controlgem.intermediate_control_gem": "§7中级控制水晶",
+  "item.controlgem.advanced_control_gem": "§6高级控制水晶",
+  "item.controlgem.ultimate_control_gem": "§b终极控制水晶",
+  "tooltip.used_control_gem": "一次可以控制§6%s个玩家，控制持续§6%s秒",
+  "tip.control_crystal.used": "谁让你没事瞎玩的？",
+  "tip.control_gem.used": "这个控制水晶屁用没有"
 }

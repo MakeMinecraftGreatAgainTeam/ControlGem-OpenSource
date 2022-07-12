@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "controlgem:block/control_crystal_ore"
+    }
+  }
+}

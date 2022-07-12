@@ -11,8 +11,8 @@ import org.mmga.controlgem.ControlGem;
  * @author wzp
  * @version 1.0.0
  */
-public class ControlGemOreBlockItem extends BlockItem {
-    public ControlGemOreBlockItem(Block block) {
+public class ControlCrystalOreBlockItem extends BlockItem {
+    public ControlCrystalOreBlockItem(Block block) {
         super(block, new Item.Settings().group(ControlGem.CONTROL_GEM_ITEM_GROUP));
     }
 }

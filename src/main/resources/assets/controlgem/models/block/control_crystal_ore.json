@@ -1,6 +1,6 @@
 {
   "parent": "block/cube_all",
   "textures": {
-    "all": "controlgem:block/control_gem_ore"
+    "all": "controlgem:block/control_crystal_ore"
   }
 }

@@ -11,21 +11,21 @@ import net.minecraft.world.World;
 import org.mmga.controlgem.ControlGem;
 
 /**
- * Created On 2022/7/12 20:42
+ * Created On 2022/7/12 23:31
  *
  * @author wzp
  * @version 1.0.0
  */
 public class ControlGemItem extends Item {
     public ControlGemItem() {
-        super(new Item.Settings().group(ControlGem.CONTROL_GEM_ITEM_GROUP));
+        super(new Settings().maxCount(1).group(ControlGem.CONTROL_GEM_ITEM_GROUP));
     }
 
-    public TypedActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
-        if (player instanceof ServerPlayerEntity serverPlayer) {
-            serverPlayer.kill();
-            serverPlayer.sendMessage(Text.of("谁让你没事瞎玩的？"));
+    @Override
+    public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
+        if (user instanceof ServerPlayerEntity serverPlayer) {
+            serverPlayer.sendMessage(Text.translatable("tip.control_gem.used"));
         }
-        return TypedActionResult.success(player.getStackInHand(hand));
+        return TypedActionResult.success(user.getStackInHand(hand));
     }
 }
