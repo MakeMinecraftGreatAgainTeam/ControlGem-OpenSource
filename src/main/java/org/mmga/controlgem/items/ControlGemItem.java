@@ -3,6 +3,7 @@ package org.mmga.controlgem.items;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
@@ -21,8 +22,10 @@ public class ControlGemItem extends Item {
     }
 
     public TypedActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
-        player.kill();
-        player.sendMessage(Text.of("谁让你没事瞎玩的？"));
+        if (player instanceof ServerPlayerEntity serverPlayer) {
+            serverPlayer.kill();
+            serverPlayer.sendMessage(Text.of("谁让你没事瞎玩的？"));
+        }
         return TypedActionResult.success(player.getStackInHand(hand));
     }
 }
