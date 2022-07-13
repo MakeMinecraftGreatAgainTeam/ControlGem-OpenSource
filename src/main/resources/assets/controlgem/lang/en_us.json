@@ -8,7 +8,11 @@
   "item.controlgem.intermediate_control_gem": "§7Intermediate Control Gem",
   "item.controlgem.advanced_control_gem": "§6Advanced Control Gem",
   "item.controlgem.ultimate_control_gem": "§bUltimate Control Gem",
-  "tooltip.used_control_gem": "You can control §6%s players at a time and control lasts for §6%s seconds",
+  "item.controlgem.super_control_gem": "§1Super Control Gem",
+  "tooltip.used_control_gem.self": "You can control up to §6 %s players at a time, and the control lasts for §6 %s seconds and There is a chance to control yourself.",
+  "tooltip.used_control_gem.other": "You can control up to §6 %s players at a time, and the control lasts for §6 %s seconds and There isn't any chance to control yourself.",
   "tip.control_crystal.used": "Curiosity Kills the cat",
-  "tip.control_gem.used": "This control gem has no effect"
+  "tip.control_gem.used": "This control gem has no effect",
+  "tip.used_control_gem.used": "Player %s activation a control gem",
+  "tip.controlgem.insufficient": "There are not enough players!"
 }

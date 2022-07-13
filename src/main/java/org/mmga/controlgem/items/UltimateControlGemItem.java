@@ -9,6 +9,6 @@ package org.mmga.controlgem.items;
  */
 public class UltimateControlGemItem extends UsedControlGemItem {
     public UltimateControlGemItem() {
-        super(3, 360);
+        super(3, 360, false);
     }
 }

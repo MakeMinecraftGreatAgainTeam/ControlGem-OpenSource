@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "controlgem:control_gem"
+          "name": "controlgem:control_crystal"
         }
       ],
       "conditions": [

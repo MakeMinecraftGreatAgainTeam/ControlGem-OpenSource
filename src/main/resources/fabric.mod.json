@@ -18,15 +18,13 @@
       "org.mmga.controlgem.ControlGem"
     ]
   },
-  "mixins": [
-    "controlgem.mixins.json"
-  ],
 
   "depends": {
     "fabricloader": ">=0.14.6",
     "fabric": "*",
     "minecraft": "~1.19",
-    "java": ">=17"
+    "java": ">=17",
+    "libgui": ">=6.0.0"
   },
   "suggests": {
     "another-mod": "*"

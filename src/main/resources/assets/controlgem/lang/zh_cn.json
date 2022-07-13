@@ -1,14 +1,18 @@
 {
   "block.controlgem.control_crystal_ore": "控制矿",
-  "item.controlgem.control_crystal": "控制晶体",
+  "item.controlgem.control_crystal": "控制水晶",
   "itemGroup.controlgem.general": "控制水晶",
-  "item.controlgem.control_gem": "控制水晶",
-  "item.controlgem.inferior_control_gem": "低级控制水晶",
-  "item.controlgem.basic_control_gem": "§8基础控制水晶",
-  "item.controlgem.intermediate_control_gem": "§7中级控制水晶",
-  "item.controlgem.advanced_control_gem": "§6高级控制水晶",
-  "item.controlgem.ultimate_control_gem": "§b终极控制水晶",
-  "tooltip.used_control_gem": "一次可以控制§6%s个玩家，控制持续§6%s秒",
+  "item.controlgem.control_gem": "控制之石",
+  "item.controlgem.inferior_control_gem": "低级控制之石",
+  "item.controlgem.basic_control_gem": "§8基础控制之石",
+  "item.controlgem.intermediate_control_gem": "§7中级控制之石",
+  "item.controlgem.advanced_control_gem": "§6高级控制之石",
+  "item.controlgem.ultimate_control_gem": "§b终极控制之石",
+  "item.controlgem.super_control_gem": "§1超级控制之石",
+  "tooltip.used_control_gem.self": "一次最多可以控制§6 %s个玩家，控制持续§6 %s秒，有可能控制到自己",
+  "tooltip.used_control_gem.other": "一次最多可以控制§6 %s个玩家，控制持续§6 %s秒，不可能控制到自己",
   "tip.control_crystal.used": "谁让你没事瞎玩的？",
-  "tip.control_gem.used": "这个控制水晶屁用没有"
+  "tip.control_gem.used": "这个控制之石屁用没有",
+  "tip.used_control_gem.used": "玩家%s激活了控制之石",
+  "tip.controlgem.insufficient": "没有足够的玩家！"
 }

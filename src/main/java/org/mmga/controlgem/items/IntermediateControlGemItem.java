@@ -10,6 +10,6 @@ package org.mmga.controlgem.items;
  */
 public class IntermediateControlGemItem extends UsedControlGemItem {
     public IntermediateControlGemItem() {
-        super(1, 120);
+        super(1, 120, true);
     }
 }

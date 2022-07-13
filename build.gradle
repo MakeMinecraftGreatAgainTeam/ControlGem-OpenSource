@@ -21,6 +21,7 @@ repositories {
 			name = "CottonMC"
 			url = "https://server.bbkr.space/artifactory/libs-release"
 		}
+		maven { url "https://maven.shedaniel.me/" }
 	}
 }
 

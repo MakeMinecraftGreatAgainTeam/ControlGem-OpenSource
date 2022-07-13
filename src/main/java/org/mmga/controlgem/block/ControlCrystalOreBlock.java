@@ -10,8 +10,8 @@ import net.minecraft.block.Material;
  * @author wzp
  * @version 1.0.0
  */
-public class ControlGemOreBlock extends Block {
-    public ControlGemOreBlock() {
-        super(FabricBlockSettings.of(Material.METAL).hardness(2.0f).requiresTool());
+public class ControlCrystalOreBlock extends Block {
+    public ControlCrystalOreBlock() {
+        super(FabricBlockSettings.of(Material.METAL).hardness(3.0f).requiresTool());
     }
 }

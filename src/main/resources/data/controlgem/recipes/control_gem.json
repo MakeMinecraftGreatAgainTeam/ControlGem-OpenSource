@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "controlgem:control_crystal"
+    },
+    {
+      "item": "controlgem:control_crystal"
+    },
+    {
+      "item": "controlgem:control_crystal"
+    },
+    {
+      "item": "controlgem:control_crystal"
+    }
+  ],
+  "result": {
+    "item": "controlgem:control_gem",
+    "count": 1
+  }
+}
