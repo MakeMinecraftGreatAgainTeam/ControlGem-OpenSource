@@ -6,6 +6,7 @@ import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
+import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
@@ -74,7 +75,7 @@ public class ControlGem implements ModInitializer {
         registerItem("super_control_gem", SUPER_CONTROL_GEM);
         registerItem("control_gem", new ControlGemItem());
         //注册指令
-        CommandRegistrationCallback.EVENT.register((dispatcher, dedicated, environment) -> dispatcher.register(CommandManager.literal("r").executes(new ReportCommand())));
+        CommandRegistrationCallback.EVENT.register((dispatcher, dedicated, environment) -> dispatcher.register(CommandManager.literal("r").then(CommandManager.argument("target", EntityArgumentType.player())).executes(new ReportCommand())));
         ServerTickEvents.END_WORLD_TICK.register(new ServerWorldTickEvent());
         //注册控制矿石生成
         Identifier controlCrystalOreOverworldIdentifier = new Identifier("controlgem", "control_crystal_ore_overworld");

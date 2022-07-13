@@ -2,16 +2,17 @@ package org.mmga.controlgem.events;
 
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.network.message.MessageType;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.PlayerManager;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.text.Text;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvent;
+import net.minecraft.sound.SoundEvents;
+import net.minecraft.text.*;
+import org.mmga.controlgem.threads.PlayerJobThread;
 import org.mmga.controlgem.utils.TitleUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 /**
  * Created On 2022/7/13 16:38
@@ -20,73 +21,123 @@ import java.util.Random;
  * @version 1.0.0
  */
 public class ServerWorldTickEvent implements ServerTickEvents.EndWorldTick {
-    public static boolean isChou = false;
-    public static int tickChou = 0;
-    public static ServerPlayerEntity luckPlayer = null;
-    public static String luckWord = null;
+    public static final Map<ServerPlayerEntity, PlayerJobThread> PLAYERS_JOBS = new HashMap<>();
+    public static boolean isStartChoose = false;
+    public static int tick = 0;
     public static List<String> words = new ArrayList<>();
-    public static List<ServerPlayerEntity> playerList = null;
+    public static PlayerManager manager = null;
+    public static int choosePlayersCount = 0;
+    public static int time = 0;
+    public static List<ServerPlayerEntity> players = null;
+    public static List<ServerPlayerEntity> choosePlayers = null;
+    public static String word = null;
+    private final Text split = Text.empty().append(",").setStyle(Style.EMPTY.withColor(TextColor.parse("white")));
 
     @Override
     public void onEndTick(ServerWorld world) {
-        Random random = new Random();
-        if (isChou && playerList != null) {
-            MinecraftServer server = world.getServer();
-            PlayerManager playerManager = server.getPlayerManager();
-            if (tickChou >= 0 && tickChou < 80) {
-                if (luckPlayer == null && luckWord == null) {
-                    int size = playerList.size();
-                    if (size == 1) {
-                        luckPlayer = playerList.get(0);
-                    } else if (size == 0) {
-                        playerManager.broadcast(Text.translatable("tip.controlgem.insufficient"), MessageType.SYSTEM);
-                        luckPlayer = null;
-                        luckWord = null;
-                        playerList = null;
-                        tickChou = 0;
-                    } else {
-                        luckPlayer = playerList.get(random.nextInt(size - 1));
-                    }
-                    luckWord = words.get(random.nextInt(words.size()));
-                } else {
-                    if (tickChou % 4 == 0) {
-                        showRandom(playerList, random, playerManager);
-                    }
+        if (isStartChoose) {
+            if (tick == 0 &&
+                    manager != null &&
+                    choosePlayersCount != 0 &&
+                    players != null &&
+                    choosePlayers == null &&
+                    word == null &&
+                    time != 0) {
+                //启动抽取的第一个tick
+                int size = players.size();
+                if (size < choosePlayersCount) {
+                    //人数不足
+                    manager.broadcast(Text.translatable("tip.controlgem.insufficient"), MessageType.SYSTEM);
+                    init();
+                    return;
+                }
+                //人数充足时
+                //内定选好的人和词
+                //打乱列表
+                Collections.shuffle(players);
+                ArrayList<String> strings = new ArrayList<>(words);
+                Collections.shuffle(strings);
+                //取出需要位数的人
+                choosePlayers = new ArrayList<>();
+                for (int i = 0; i < choosePlayersCount; i++) {
+                    choosePlayers.add(players.get(i));
+                }
+                //选出第一位的词
+                word = strings.get(0);
+                //设置标题显示时间
+                TitleUtils.setAllTitleTimes(1, 4, 1, manager);
+            }
+            if (tick >= 0 && tick < 80) {
+                //前80tick
+                //每4tick展示一次
+                if (tick % 4 == 0) {
+                    renderRandomResult();
                 }
             }
-            if (tickChou >= 80 && tickChou < 140) {
-                if (tickChou % 8 == 0) {
-                    showRandom(playerList, random, playerManager);
+            if (tick == 80) {
+                TitleUtils.setAllTitleTimes(1, 8, 1, manager);
+            }
+            if (tick >= 80 && tick < 140) {
+                if (tick % 8 == 0) {
+                    renderRandomResult();
                 }
             }
-            if (tickChou >= 140 && tickChou < 160) {
-                if (tickChou % 10 == 0) {
-                    showRandom(playerList, random, playerManager);
+            if (tick == 140) {
+                TitleUtils.setAllTitleTimes(1, 40, 1, manager);
+                renderRightResult();
+                for (ServerPlayerEntity player : players) {
+                    PlayerJobThread playerJobThread = new PlayerJobThread(player, word, time);
+                    playerJobThread.start();
                 }
+                init();
+                return;
             }
-            if (tickChou == 160) {
-                TitleUtils.setAllTitleTimes(1, 20, 1, playerManager);
-                TitleUtils.sendTitle(TitleUtils.Type.TITLE, luckPlayer.getName(), playerManager);
-                TitleUtils.sendTitle(TitleUtils.Type.SUBTITLE, Text.of(luckWord), playerManager);
-                luckPlayer = null;
-                luckWord = null;
-                playerList = null;
-                tickChou = 0;
-            }
-            tickChou++;
+            tick++;
         }
     }
 
-    public void showRandom(List<ServerPlayerEntity> playerList, Random random, PlayerManager playerManager) {
-        int size = playerList.size();
-        ServerPlayerEntity show;
-        if (size == 1) {
-            show = playerList.get(0);
-        } else {
-            show = playerList.get(random.nextInt(size - 1));
+    public void init() {
+        isStartChoose = false;
+        manager = null;
+        choosePlayersCount = 0;
+        choosePlayers = null;
+        players = null;
+        word = null;
+        tick = 0;
+        time = 0;
+    }
+
+    public void renderRandomResult() {
+        Collections.shuffle(players);
+        Collections.shuffle(words);
+        List<ServerPlayerEntity> tempPlayers = new ArrayList<>();
+        String tempWord = words.get(0);
+        for (int i = 0; i < choosePlayersCount; i++) {
+            tempPlayers.add(players.get(i));
         }
-        TitleUtils.setAllTitleTimes(1, 20, 1, playerManager);
-        TitleUtils.sendTitle(TitleUtils.Type.TITLE, show.getName(), playerManager);
-        TitleUtils.sendTitle(TitleUtils.Type.SUBTITLE, Text.of(words.get(random.nextInt(words.size()))), playerManager);
+        renderResult(tempPlayers, tempWord, SoundEvents.BLOCK_NOTE_BLOCK_BIT);
+    }
+
+    public void renderRightResult() {
+        MutableText playerNames = renderResult(choosePlayers, word, SoundEvents.ENTITY_PLAYER_LEVELUP);
+        manager.broadcast(Text.translatable("tip.controlgem.done", playerNames, time, word), MessageType.SYSTEM);
+    }
+
+    public MutableText renderResult(List<ServerPlayerEntity> player, String word, SoundEvent sound) {
+        MutableText playersName = MutableText.of(TextContent.EMPTY);
+        int i = 0;
+        int playerSize = player.size();
+        for (ServerPlayerEntity serverPlayerEntity : player) {
+            playersName.append(serverPlayerEntity.getName()).setStyle(Style.EMPTY.withColor(TextColor.parse("blue")));
+            if (i != playerSize - 1) {
+                playersName.append(split);
+            }
+        }
+        TitleUtils.sendTitle(TitleUtils.Type.TITLE, playersName, manager);
+        TitleUtils.sendTitle(TitleUtils.Type.SUBTITLE, Text.of(word), manager);
+        for (ServerPlayerEntity serverPlayerEntity : manager.getPlayerList()) {
+            serverPlayerEntity.playSound(sound, SoundCategory.VOICE, 1.0f, 1.0f);
+        }
+        return playersName;
     }
 }

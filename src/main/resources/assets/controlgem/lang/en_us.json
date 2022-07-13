@@ -14,5 +14,7 @@
   "tip.control_crystal.used": "Curiosity Kills the cat",
   "tip.control_gem.used": "This control gem has no effect",
   "tip.used_control_gem.used": "Player %s activation a control gem",
-  "tip.controlgem.insufficient": "There are not enough players!"
+  "tip.controlgem.insufficient": "There are not enough players!",
+  "tip.controlgem.done": "Player %s will did %s in the next %s seconds",
+  "tip.controlgem.failed": "%s was failed!"
 }

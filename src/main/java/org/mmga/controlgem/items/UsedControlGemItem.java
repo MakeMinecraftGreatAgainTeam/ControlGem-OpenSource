@@ -6,7 +6,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.network.message.MessageType;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.PlayerManager;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -18,6 +17,7 @@ import org.jetbrains.annotations.Nullable;
 import org.mmga.controlgem.ControlGem;
 import org.mmga.controlgem.events.ServerWorldTickEvent;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -40,26 +40,30 @@ public class UsedControlGemItem extends Item {
 
     public TypedActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
         if (player instanceof ServerPlayerEntity serverPlayer) {
-            Text name = serverPlayer.getName();
             MinecraftServer server = serverPlayer.getServer();
             if (server != null) {
                 PlayerManager playerManager = server.getPlayerManager();
-                List<ServerPlayerEntity> playerList = playerManager.getPlayerList();
+                List<ServerPlayerEntity> playerList = new ArrayList<>(playerManager.getPlayerList());
                 for (ServerPlayerEntity serverPlayerEntity : playerList) {
-                    ItemCooldownManager itemCooldownManager = serverPlayerEntity.getItemCooldownManager();
-                    itemCooldownManager.set(ControlGem.INFERIOR_CONTROL_GEM, 2 * 20);
-                    itemCooldownManager.set(ControlGem.BASIC_CONTROL_GEM, 2 * 20);
-                    itemCooldownManager.set(ControlGem.INTERMEDIATE_CONTROL_GEM, 2 * 20);
-                    itemCooldownManager.set(ControlGem.ADVANCED_CONTROL_GEM, 2 * 20);
-                    itemCooldownManager.set(ControlGem.ULTIMATE_CONTROL_GEM, 2 * 20);
-                    itemCooldownManager.set(ControlGem.SUPER_CONTROL_GEM, 2 * 20);
+                    ItemCooldownManager cd = serverPlayerEntity.getItemCooldownManager();
+                    cd.set(ControlGem.INFERIOR_CONTROL_GEM, 160);
+                    cd.set(ControlGem.BASIC_CONTROL_GEM, 160);
+                    cd.set(ControlGem.INTERMEDIATE_CONTROL_GEM, 160);
+                    cd.set(ControlGem.ADVANCED_CONTROL_GEM, 160);
+                    cd.set(ControlGem.ULTIMATE_CONTROL_GEM, 160);
+                    cd.set(ControlGem.SUPER_CONTROL_GEM, 160);
                 }
-                playerManager.broadcast(Text.translatable("tip.used_control_gem.used", name), MessageType.SYSTEM);
-                if (!self) {
-                    playerList.remove(serverPlayer);
+                if (!this.self) {
+                    playerList.remove(player);
                 }
-                ServerWorldTickEvent.playerList = playerList;
-                ServerWorldTickEvent.isChou = true;
+                for (ServerPlayerEntity serverPlayerEntity : ServerWorldTickEvent.PLAYERS_JOBS.keySet()) {
+                    playerList.remove(serverPlayerEntity);
+                }
+                ServerWorldTickEvent.manager = playerManager;
+                ServerWorldTickEvent.choosePlayersCount = this.playerCount;
+                ServerWorldTickEvent.players = playerList;
+                ServerWorldTickEvent.isStartChoose = true;
+                ServerWorldTickEvent.time = this.keepTime;
             }
             return TypedActionResult.success(new ItemStack(Items.AIR));
         } else {

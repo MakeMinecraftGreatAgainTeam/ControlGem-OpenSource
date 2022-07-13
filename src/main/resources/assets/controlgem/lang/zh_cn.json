@@ -14,5 +14,7 @@
   "tip.control_crystal.used": "谁让你没事瞎玩的？",
   "tip.control_gem.used": "这个控制之石屁用没有",
   "tip.used_control_gem.used": "玩家%s激活了控制之石",
-  "tip.controlgem.insufficient": "没有足够的玩家！"
+  "tip.controlgem.insufficient": "没有足够的玩家！",
+  "tip.controlgem.done": "玩家%s需在%s秒内%s",
+  "tip.controlgem.failed": "%s失败了"
 }

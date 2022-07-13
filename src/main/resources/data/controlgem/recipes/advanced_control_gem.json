@@ -1,5 +1,5 @@
 {
-  "type": "crafting_shaped",
+  "type": "minecraft:crafting_shaped",
   "pattern": [
     " A ",
     "ABA",
@@ -12,5 +12,9 @@
     "B": {
       "item": "controlgem:control_gem"
     }
+  },
+  "result": {
+    "item": "controlgem:advanced_control_gem",
+    "count": 1
   }
 }
