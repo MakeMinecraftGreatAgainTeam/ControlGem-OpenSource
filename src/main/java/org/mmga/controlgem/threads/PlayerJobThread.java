@@ -108,6 +108,14 @@ public class PlayerJobThread extends Thread {
             manager.broadcast(Text.translatable("tip.controlgem.success", name), MessageType.SYSTEM);
             scores.put(entity, scores.getOrDefault(entity, 0) + 1);
             scores.put(source, scores.getOrDefault(source, 0) - 1);
+            EntityAttributeInstance health = entity.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH);
+            if (health != null) {
+                float healthy = (float) (health.getValue() + 2);
+                health.setBaseValue(healthy);
+                if (entity.getHealth() < healthy) {
+                    entity.setHealth(healthy);
+                }
+            }
         } else {
             scores.put(entity, scores.getOrDefault(entity, 0) - 1);
             scores.put(source, scores.getOrDefault(source, 0) + 1);
@@ -131,7 +139,7 @@ public class PlayerJobThread extends Thread {
             }
             int score = scores.getOrDefault(player, 0);
             serverScoreboard.getPlayerScore(player.getName().getString(), scoreObjective).setScore(score);
-            if (score == 5) {
+            if (score == 10) {
                 TitleUtils.setAllTitleTimes(10, 80, 10, manager);
                 TitleUtils.sendTitle(TitleUtils.Type.TITLE, Text.translatable("tip.controlgem.win", player.getName()), manager);
                 List<ServerPlayerEntity> playerList = manager.getPlayerList();
@@ -150,7 +158,6 @@ public class PlayerJobThread extends Thread {
     public void setEntity(ServerPlayerEntity entity) {
         this.entity = entity;
     }
-
     public void failed() {
         this.isFailed = true;
         EntityAttributeInstance health = entity.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH);

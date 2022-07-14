@@ -46,13 +46,21 @@ public class ControlGem implements ModInitializer {
             () -> new ItemStack(CONTROL_CRYSTAL_ORE_BLOCK)
     );
     public static final ConfiguredFeature<?, ?> CONTROL_CRYSTAL_ORE_OVERWORLD_CONFIGURED_FEATURE =
-            new ConfiguredFeature<>(Feature.ORE, new OreFeatureConfig(OreConfiguredFeatures.STONE_ORE_REPLACEABLES, CONTROL_CRYSTAL_ORE_BLOCK.getDefaultState(), 5));
+            new ConfiguredFeature<>(Feature.ORE, new OreFeatureConfig(OreConfiguredFeatures.STONE_ORE_REPLACEABLES, CONTROL_CRYSTAL_ORE_BLOCK.getDefaultState(), 20));
+    public static final ConfiguredFeature<?, ?> CONTROL_CRYSTAL_ORE_OVERWORLD_DEEP_FEATURE = new ConfiguredFeature<>(Feature.ORE, new OreFeatureConfig(OreConfiguredFeatures.DEEPSLATE_ORE_REPLACEABLES, CONTROL_CRYSTAL_ORE_BLOCK.getDefaultState(), 20));
     public static final PlacedFeature CONTROL_CRYSTAL_ORE_OVERWORLD_PLACED_FEATURE = new PlacedFeature(
             RegistryEntry.of(CONTROL_CRYSTAL_ORE_OVERWORLD_CONFIGURED_FEATURE),
             Arrays.asList(
-                    CountPlacementModifier.of(6),
+                    CountPlacementModifier.of(12),
                     SquarePlacementModifier.of(),
-                    HeightRangePlacementModifier.uniform(YOffset.getBottom(), YOffset.fixed(15))
+                    HeightRangePlacementModifier.uniform(YOffset.getBottom(), YOffset.getTop())
+            ));
+    public static final PlacedFeature CONTROL_CRYSTAL_ORE_OVERWORLD_DEEP_PLACED_FEATURE = new PlacedFeature(
+            RegistryEntry.of(CONTROL_CRYSTAL_ORE_OVERWORLD_DEEP_FEATURE),
+            Arrays.asList(
+                    CountPlacementModifier.of(12),
+                    SquarePlacementModifier.of(),
+                    HeightRangePlacementModifier.uniform(YOffset.getBottom(), YOffset.getTop())
             ));
     public static final Item INFERIOR_CONTROL_GEM = new InferiorControlGemItem();
     public static final Item BASIC_CONTROL_GEM = new BasicControlGemItem();
@@ -86,8 +94,12 @@ public class ControlGem implements ModInitializer {
         Registry.register(BuiltinRegistries.PLACED_FEATURE, controlCrystalOreOverworldIdentifier, CONTROL_CRYSTAL_ORE_OVERWORLD_PLACED_FEATURE);
         BiomeModifications.addFeature(BiomeSelectors.foundInOverworld(), GenerationStep.Feature.UNDERGROUND_ORES,
                 RegistryKey.of(Registry.PLACED_FEATURE_KEY, controlCrystalOreOverworldIdentifier));
+        Identifier controlCrystalOreOverworldDeepIdentifier = new Identifier("controlgem", "control_crystal_ore_overworld_deep");
+        Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, controlCrystalOreOverworldDeepIdentifier, CONTROL_CRYSTAL_ORE_OVERWORLD_DEEP_FEATURE);
+        Registry.register(BuiltinRegistries.PLACED_FEATURE, controlCrystalOreOverworldDeepIdentifier, CONTROL_CRYSTAL_ORE_OVERWORLD_DEEP_PLACED_FEATURE);
+        BiomeModifications.addFeature(BiomeSelectors.foundInOverworld(), GenerationStep.Feature.UNDERGROUND_ORES,
+                RegistryKey.of(Registry.PLACED_FEATURE_KEY, controlCrystalOreOverworldDeepIdentifier));
         ServerWorldTickEvent.words.add("含水说话");
-        ServerWorldTickEvent.words.add("死5次");
         ServerWorldTickEvent.words.add("唱歌");
         ServerWorldTickEvent.words.add("用唱歌的音调说话");
         ServerWorldTickEvent.words.add("用中式英语说话");
@@ -96,6 +108,12 @@ public class ControlGem implements ModInitializer {
         ServerWorldTickEvent.words.add("摆烂");
         ServerWorldTickEvent.words.add("模仿杰哥");
         ServerWorldTickEvent.words.add("模仿发起者说话");
+        ServerWorldTickEvent.words.add("被揍");
+        ServerWorldTickEvent.words.add("每句话后面都要加上但是我是猪");
+        ServerWorldTickEvent.words.add("每一次说话前都要奸笑");
+        ServerWorldTickEvent.words.add("每句话都要加上嗯哼~");
+        ServerWorldTickEvent.words.add("每句话都要夹起来");
+        ServerWorldTickEvent.words.add("学习野兽先辈");
         LOGGER.info("控制水晶加载成功");
     }
 

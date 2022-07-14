@@ -2,6 +2,7 @@ package org.mmga.controlgem.events;
 
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.network.message.MessageType;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.PlayerManager;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -93,6 +94,23 @@ public class ServerWorldTickEvent implements ServerTickEvents.EndWorldTick {
                 return;
             }
             tick++;
+        }
+        for (ServerPlayerEntity player : PLAYERS_JOBS.keySet()) {
+            UUID uuid = player.getUuid();
+            Text name = player.getName();
+            MinecraftServer server = player.getServer();
+            assert server != null;
+            PlayerManager playerManager = server.getPlayerManager();
+            ServerPlayerEntity player1 = playerManager.getPlayer(name.getString());
+            PlayerJobThread playerJobThread = PLAYERS_JOBS.get(player);
+            if (player1 != null) {
+                UUID uuid1 = player1.getUuid();
+                if (uuid != uuid1) {
+                    playerJobThread.setEntity(player1);
+                    PLAYERS_JOBS.put(player1, playerJobThread);
+                    PLAYERS_JOBS.remove(player);
+                }
+            }
         }
     }
 
