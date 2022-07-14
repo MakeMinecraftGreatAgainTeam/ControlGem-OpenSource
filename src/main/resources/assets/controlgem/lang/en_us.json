@@ -13,8 +13,13 @@
   "tooltip.used_control_gem.other": "You can control up to §6 %s players at a time, and the control lasts for §6 %s seconds and There isn't any chance to control yourself.",
   "tip.control_crystal.used": "Curiosity Kills the cat",
   "tip.control_gem.used": "This control gem has no effect",
-  "tip.used_control_gem.used": "Player %s activation a control gem",
+  "tip.used_control_gem.used": "Player §1 %s §r activation a control gem",
   "tip.controlgem.insufficient": "There are not enough players!",
-  "tip.controlgem.done": "Player %s will did %s in the next %s seconds",
-  "tip.controlgem.failed": "%s was failed!"
+  "tip.controlgem.done": "Player §1 %s §r will did %s in the next %s seconds",
+  "tip.controlgem.failed": "§1 %s §r was failed!",
+  "tip.controlgem.success": "§1 %s §r was success!",
+  "tip.controlgem.unknown": "This player is not controlled",
+  "tip.controlgem.scoreboard.title": "§1Tasks",
+  "tip.controlgem.win": "Player §1 %s §r was win!",
+  "tip.controlgem.report.success": "Report success!"
 }

@@ -13,8 +13,13 @@
   "tooltip.used_control_gem.other": "一次最多可以控制§6 %s个玩家，控制持续§6 %s秒，不可能控制到自己",
   "tip.control_crystal.used": "谁让你没事瞎玩的？",
   "tip.control_gem.used": "这个控制之石屁用没有",
-  "tip.used_control_gem.used": "玩家%s激活了控制之石",
+  "tip.used_control_gem.used": "玩家§1%s激活了控制之石",
   "tip.controlgem.insufficient": "没有足够的玩家！",
-  "tip.controlgem.done": "玩家%s需在%s秒内%s",
-  "tip.controlgem.failed": "%s失败了"
+  "tip.controlgem.done": "玩家§1%s需在%s秒内%s",
+  "tip.controlgem.failed": "§1%s失败了",
+  "tip.controlgem.success": "§1%s完成了任务",
+  "tip.controlgem.unknown": "这个玩家没有被控制",
+  "tip.controlgem.scoreboard.title": "§1任务列表",
+  "tip.controlgem.win": "玩家§1%s赢了！",
+  "tip.controlgem.report.success": "举报成功！"
 }

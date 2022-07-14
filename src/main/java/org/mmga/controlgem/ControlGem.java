@@ -5,6 +5,7 @@ import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
+import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.item.Item;
@@ -24,6 +25,7 @@ import net.minecraft.world.gen.placementmodifier.HeightRangePlacementModifier;
 import net.minecraft.world.gen.placementmodifier.SquarePlacementModifier;
 import org.mmga.controlgem.block.ControlCrystalOreBlock;
 import org.mmga.controlgem.commands.ReportCommand;
+import org.mmga.controlgem.events.PlayerRespawnEvent;
 import org.mmga.controlgem.events.ServerWorldTickEvent;
 import org.mmga.controlgem.items.*;
 import org.slf4j.Logger;
@@ -75,8 +77,9 @@ public class ControlGem implements ModInitializer {
         registerItem("super_control_gem", SUPER_CONTROL_GEM);
         registerItem("control_gem", new ControlGemItem());
         //注册指令
-        CommandRegistrationCallback.EVENT.register((dispatcher, dedicated, environment) -> dispatcher.register(CommandManager.literal("r").then(CommandManager.argument("target", EntityArgumentType.player())).executes(new ReportCommand())));
+        CommandRegistrationCallback.EVENT.register((dispatcher, dedicated, environment) -> dispatcher.register(CommandManager.literal("r").then(CommandManager.argument("target", EntityArgumentType.player()).executes(new ReportCommand()))));
         ServerTickEvents.END_WORLD_TICK.register(new ServerWorldTickEvent());
+        ServerPlayerEvents.AFTER_RESPAWN.register(new PlayerRespawnEvent());
         //注册控制矿石生成
         Identifier controlCrystalOreOverworldIdentifier = new Identifier("controlgem", "control_crystal_ore_overworld");
         Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, controlCrystalOreOverworldIdentifier, CONTROL_CRYSTAL_ORE_OVERWORLD_CONFIGURED_FEATURE);
@@ -84,8 +87,15 @@ public class ControlGem implements ModInitializer {
         BiomeModifications.addFeature(BiomeSelectors.foundInOverworld(), GenerationStep.Feature.UNDERGROUND_ORES,
                 RegistryKey.of(Registry.PLACED_FEATURE_KEY, controlCrystalOreOverworldIdentifier));
         ServerWorldTickEvent.words.add("含水说话");
-        ServerWorldTickEvent.words.add("一分钟死5次");
+        ServerWorldTickEvent.words.add("死5次");
         ServerWorldTickEvent.words.add("唱歌");
+        ServerWorldTickEvent.words.add("用唱歌的音调说话");
+        ServerWorldTickEvent.words.add("用中式英语说话");
+        ServerWorldTickEvent.words.add("用方言说话（没方言的用英语）");
+        ServerWorldTickEvent.words.add("每说一句话敲一次桌子");
+        ServerWorldTickEvent.words.add("摆烂");
+        ServerWorldTickEvent.words.add("模仿杰哥");
+        ServerWorldTickEvent.words.add("模仿发起者说话");
         LOGGER.info("控制水晶加载成功");
     }
 

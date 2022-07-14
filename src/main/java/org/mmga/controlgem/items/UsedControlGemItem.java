@@ -6,6 +6,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.network.message.MessageType;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.PlayerManager;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -59,11 +60,17 @@ public class UsedControlGemItem extends Item {
                 for (ServerPlayerEntity serverPlayerEntity : ServerWorldTickEvent.PLAYERS_JOBS.keySet()) {
                     playerList.remove(serverPlayerEntity);
                 }
+                if (playerList.size() < this.playerCount) {
+                    playerManager.broadcast(Text.translatable("tip.controlgem.insufficient"), MessageType.SYSTEM);
+                    return super.use(world, player, hand);
+                }
                 ServerWorldTickEvent.manager = playerManager;
                 ServerWorldTickEvent.choosePlayersCount = this.playerCount;
                 ServerWorldTickEvent.players = playerList;
-                ServerWorldTickEvent.isStartChoose = true;
                 ServerWorldTickEvent.time = this.keepTime;
+                ServerWorldTickEvent.sender = serverPlayer;
+                ServerWorldTickEvent.isStartChoose = true;
+                playerManager.broadcast(Text.translatable("tip.used_control_gem.used", player.getName()), MessageType.SYSTEM);
             }
             return TypedActionResult.success(new ItemStack(Items.AIR));
         } else {

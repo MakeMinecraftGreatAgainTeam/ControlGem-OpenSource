@@ -32,7 +32,7 @@ public class ServerWorldTickEvent implements ServerTickEvents.EndWorldTick {
     public static List<ServerPlayerEntity> choosePlayers = null;
     public static String word = null;
     private final Text split = Text.empty().append(",").setStyle(Style.EMPTY.withColor(TextColor.parse("white")));
-
+    public static ServerPlayerEntity sender = null;
     @Override
     public void onEndTick(ServerWorld world) {
         if (isStartChoose) {
@@ -42,12 +42,12 @@ public class ServerWorldTickEvent implements ServerTickEvents.EndWorldTick {
                     players != null &&
                     choosePlayers == null &&
                     word == null &&
-                    time != 0) {
+                    time != 0 &&
+                    sender != null) {
                 //启动抽取的第一个tick
                 int size = players.size();
                 if (size < choosePlayersCount) {
                     //人数不足
-                    manager.broadcast(Text.translatable("tip.controlgem.insufficient"), MessageType.SYSTEM);
                     init();
                     return;
                 }
@@ -85,8 +85,8 @@ public class ServerWorldTickEvent implements ServerTickEvents.EndWorldTick {
             if (tick == 140) {
                 TitleUtils.setAllTitleTimes(1, 40, 1, manager);
                 renderRightResult();
-                for (ServerPlayerEntity player : players) {
-                    PlayerJobThread playerJobThread = new PlayerJobThread(player, word, time);
+                for (ServerPlayerEntity player : choosePlayers) {
+                    PlayerJobThread playerJobThread = new PlayerJobThread(player, word, time, sender);
                     playerJobThread.start();
                 }
                 init();
@@ -105,6 +105,7 @@ public class ServerWorldTickEvent implements ServerTickEvents.EndWorldTick {
         word = null;
         tick = 0;
         time = 0;
+        sender = null;
     }
 
     public void renderRandomResult() {
