@@ -20,5 +20,6 @@
   "tip.controlgem.success": "§1%s完成了任务",
   "tip.controlgem.unknown": "这个玩家没有被控制",
   "tip.controlgem.win": "玩家§1%s赢了！",
-  "tip.controlgem.report.success": "举报成功！"
+  "tip.controlgem.report.success": "成功举报玩家%s！",
+  "tip.controlgem.report.already": "你举报过这个玩家一次了！"
 }

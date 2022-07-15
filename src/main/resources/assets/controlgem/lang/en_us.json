@@ -20,5 +20,6 @@
   "tip.controlgem.success": "§1 %s §r was success!",
   "tip.controlgem.unknown": "This player is not controlled",
   "tip.controlgem.win": "Player §1 %s §r was win!",
-  "tip.controlgem.report.success": "Report success!"
+  "tip.controlgem.report.already": "You already report this player once!",
+  "tip.controlgem.report.success": "Report %s was succeeded!"
 }

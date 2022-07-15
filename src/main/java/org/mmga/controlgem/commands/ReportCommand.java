@@ -15,10 +15,7 @@ import net.minecraft.text.Text;
 import org.mmga.controlgem.events.ServerWorldTickEvent;
 import org.mmga.controlgem.threads.PlayerJobThread;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created On 2022/7/12 23:51
@@ -27,8 +24,9 @@ import java.util.Map;
  * @version 1.0.0
  */
 public class ReportCommand implements Command<ServerCommandSource> {
-    Map<ServerPlayerEntity, Integer> playerCount = new HashMap<>();
-    Map<ServerCommandSource, ArrayList<ServerPlayerEntity>> playersReport = new HashMap<>();
+    public static final Map<ServerPlayerEntity, Integer> playerCount = new HashMap<>();
+    public static final Map<UUID, ArrayList<ServerPlayerEntity>> playersReport = new HashMap<>();
+
     @Override
     public int run(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
         ServerPlayerEntity target = EntityArgumentType.getPlayer(context, "target");
@@ -40,13 +38,14 @@ public class ReportCommand implements Command<ServerCommandSource> {
         }
         int count = playerCount.getOrDefault(target, 0) + 1;
         playerCount.put(target, count);
-        ArrayList<ServerPlayerEntity> list = playersReport.getOrDefault(source, new ArrayList<>());
+        UUID sender = source.getChatMessageSender().uuid();
+        ArrayList<ServerPlayerEntity> list = playersReport.getOrDefault(sender, new ArrayList<>());
         if (list.contains(target)) {
             source.sendFeedback(Text.translatable("tip.controlgem.report.already"), false);
             return 1;
         }
         list.add(target);
-        playersReport.put(source, list);
+        playersReport.put(sender, list);
         MinecraftServer server = target.getServer();
         assert server != null;
         PlayerManager playerManager = server.getPlayerManager();
@@ -58,7 +57,6 @@ public class ReportCommand implements Command<ServerCommandSource> {
             for (ServerPlayerEntity player : playerManager.getPlayerList()) {
                 player.playSound(SoundEvents.BLOCK_ANVIL_LAND, SoundCategory.VOICE, 1.0f, 1.0f);
             }
-            playerCount.remove(target);
         }
         source.sendFeedback(Text.translatable("tip.controlgem.report.success", target.getName()), true);
         return 1;

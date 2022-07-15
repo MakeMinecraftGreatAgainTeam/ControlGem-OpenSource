@@ -19,15 +19,13 @@ import java.util.List;
 @Environment(EnvType.CLIENT)
 public class StartClientWorldTick implements ClientTickEvents.StartWorldTick {
     public static List<ClientOnServerTick.Data> data = new ArrayList<>();
-    private final ArrayList<TaskWidget> tasks = new ArrayList<>();
+    private ArrayList<TaskWidget> tasks = new ArrayList<>();
 
     @Override
     public void onStartTick(ClientWorld world) {
-        for (TaskWidget task : tasks) {
-            CottonHud.remove(task);
-        }
-        tasks.clear();
         int i = data.size();
+        List<TaskWidget> tData = new ArrayList<>();
+        int size = tasks.size();
         for (int i1 = 0; i1 < i; i1++) {
             ClientOnServerTick.Data d = data.get(i1);
             String name = d.getName();
@@ -35,9 +33,17 @@ public class StartClientWorldTick implements ClientTickEvents.StartWorldTick {
             int fullTime = d.getFullTime();
             int time = d.getTime();
             TaskWidget taskWidget = new TaskWidget(name, word, fullTime, time);
-            tasks.add(taskWidget);
+            if (size > i1) {
+                CottonHud.remove(tasks.get(i1));
+            }
             CottonHud.add(taskWidget, 10, 10 + 15 * i1);
+            tData.add(taskWidget);
         }
-        data.clear();
+        if (size > i) {
+            for (TaskWidget task : tasks) {
+                CottonHud.remove(task);
+            }
+        }
+        tasks = new ArrayList<>(tData);
     }
 }

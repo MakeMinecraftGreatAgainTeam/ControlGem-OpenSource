@@ -15,12 +15,11 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.world.GameMode;
+import org.mmga.controlgem.commands.ReportCommand;
 import org.mmga.controlgem.events.ServerWorldTickEvent;
 import org.mmga.controlgem.utils.TitleUtils;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 /**
  * Created On 2022/7/13 23:43
@@ -135,6 +134,11 @@ public class PlayerJobThread extends Thread {
             }
         }
         ServerWorldTickEvent.PLAYERS_JOBS.remove(this.getEntity());
+        ReportCommand.playerCount.put(entity, 0);
+        for (UUID uuid : ReportCommand.playersReport.keySet()) {
+            ArrayList<ServerPlayerEntity> serverPlayerEntities = ReportCommand.playersReport.get(uuid);
+            serverPlayerEntities.remove(entity);
+        }
     }
 
     public ServerPlayerEntity getEntity() {
