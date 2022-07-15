@@ -19,7 +19,6 @@
   "tip.controlgem.failed": "§1 %s §r was failed!",
   "tip.controlgem.success": "§1 %s §r was success!",
   "tip.controlgem.unknown": "This player is not controlled",
-  "tip.controlgem.scoreboard.title": "§1Tasks",
   "tip.controlgem.win": "Player §1 %s §r was win!",
   "tip.controlgem.report.success": "Report success!"
 }

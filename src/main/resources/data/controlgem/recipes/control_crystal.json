@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:blasting",
+  "cookingtime": 50,
+  "experience": 1.0,
+  "group": "control_crystal",
+  "ingredient": {
+    "item": "controlgem:control_crystal_ore"
+  },
+  "result": "controlgem:control_crystal"
+}

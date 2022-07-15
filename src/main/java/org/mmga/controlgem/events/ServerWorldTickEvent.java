@@ -1,6 +1,9 @@
 package org.mmga.controlgem.events;
 
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.message.MessageType;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.PlayerManager;
@@ -15,13 +18,15 @@ import org.mmga.controlgem.utils.TitleUtils;
 
 import java.util.*;
 
+import static org.mmga.controlgem.ControlGem.CHANNEL_ID;
+
 /**
  * Created On 2022/7/13 16:38
  *
  * @author wzp
  * @version 1.0.0
  */
-public class ServerWorldTickEvent implements ServerTickEvents.EndWorldTick {
+public class ServerWorldTickEvent implements ServerTickEvents.StartWorldTick {
     public static final Map<ServerPlayerEntity, PlayerJobThread> PLAYERS_JOBS = new HashMap<>();
     public static boolean isStartChoose = false;
     public static int tick = 0;
@@ -34,8 +39,33 @@ public class ServerWorldTickEvent implements ServerTickEvents.EndWorldTick {
     public static String word = null;
     private final Text split = Text.empty().append(",").setStyle(Style.EMPTY.withColor(TextColor.parse("white")));
     public static ServerPlayerEntity sender = null;
+
     @Override
-    public void onEndTick(ServerWorld world) {
+    public void onStartTick(ServerWorld world) {
+        PacketByteBuf byteBuf = PacketByteBufs.create();
+        byteBuf.writeInt(PLAYERS_JOBS.size());
+        for (ServerPlayerEntity player : PLAYERS_JOBS.keySet()) {
+            Text name = player.getName();
+            UUID uuid = player.getUuid();
+            String nameString = name.getString();
+            byteBuf.writeString(nameString);
+            PlayerJobThread playerJobThread = PLAYERS_JOBS.get(player);
+            byteBuf.writeString(playerJobThread.getWord());
+            byteBuf.writeInt(playerJobThread.getFullTime());
+            byteBuf.writeInt(playerJobThread.getTime());
+            MinecraftServer server = player.getServer();
+            assert server != null;
+            PlayerManager playerManager = server.getPlayerManager();
+            ServerPlayerEntity player1 = playerManager.getPlayer(name.getString());
+            if (player1 != null) {
+                UUID uuid1 = player1.getUuid();
+                if (uuid != uuid1) {
+                    playerJobThread.setEntity(player1);
+                    PLAYERS_JOBS.put(player1, playerJobThread);
+                    PLAYERS_JOBS.remove(player);
+                }
+            }
+        }
         if (isStartChoose) {
             if (tick == 0 &&
                     manager != null &&
@@ -95,22 +125,9 @@ public class ServerWorldTickEvent implements ServerTickEvents.EndWorldTick {
             }
             tick++;
         }
-        for (ServerPlayerEntity player : PLAYERS_JOBS.keySet()) {
-            UUID uuid = player.getUuid();
-            Text name = player.getName();
-            MinecraftServer server = player.getServer();
-            assert server != null;
-            PlayerManager playerManager = server.getPlayerManager();
-            ServerPlayerEntity player1 = playerManager.getPlayer(name.getString());
-            PlayerJobThread playerJobThread = PLAYERS_JOBS.get(player);
-            if (player1 != null) {
-                UUID uuid1 = player1.getUuid();
-                if (uuid != uuid1) {
-                    playerJobThread.setEntity(player1);
-                    PLAYERS_JOBS.put(player1, playerJobThread);
-                    PLAYERS_JOBS.remove(player);
-                }
-            }
+        List<ServerPlayerEntity> playerList = world.getServer().getPlayerManager().getPlayerList();
+        for (ServerPlayerEntity player : playerList) {
+            ServerPlayNetworking.send(player, CHANNEL_ID, byteBuf);
         }
     }
 

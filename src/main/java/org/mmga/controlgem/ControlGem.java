@@ -68,7 +68,7 @@ public class ControlGem implements ModInitializer {
     public static final Item ADVANCED_CONTROL_GEM = new AdvancedControlGemItem();
     public static final Item ULTIMATE_CONTROL_GEM = new UltimateControlGemItem();
     public static final Item SUPER_CONTROL_GEM = new SuperControlGemItem();
-
+    public static final Identifier CHANNEL_ID = new Identifier("controlgem", "channel");
     @Override
     public void onInitialize() {
         LOGGER.info("控制水晶开始加载");
@@ -86,7 +86,7 @@ public class ControlGem implements ModInitializer {
         registerItem("control_gem", new ControlGemItem());
         //注册指令
         CommandRegistrationCallback.EVENT.register((dispatcher, dedicated, environment) -> dispatcher.register(CommandManager.literal("r").then(CommandManager.argument("target", EntityArgumentType.player()).executes(new ReportCommand()))));
-        ServerTickEvents.END_WORLD_TICK.register(new ServerWorldTickEvent());
+        ServerTickEvents.START_WORLD_TICK.register(new ServerWorldTickEvent());
         ServerPlayerEvents.AFTER_RESPAWN.register(new PlayerRespawnEvent());
         //注册控制矿石生成
         Identifier controlCrystalOreOverworldIdentifier = new Identifier("controlgem", "control_crystal_ore_overworld");

@@ -19,7 +19,6 @@
   "tip.controlgem.failed": "§1%s失败了",
   "tip.controlgem.success": "§1%s完成了任务",
   "tip.controlgem.unknown": "这个玩家没有被控制",
-  "tip.controlgem.scoreboard.title": "§1任务列表",
   "tip.controlgem.win": "玩家§1%s赢了！",
   "tip.controlgem.report.success": "举报成功！"
 }

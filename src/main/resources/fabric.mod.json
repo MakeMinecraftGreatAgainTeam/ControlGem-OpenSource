@@ -16,6 +16,9 @@
   "entrypoints": {
     "main": [
       "org.mmga.controlgem.ControlGem"
+    ],
+    "client": [
+      "org.mmga.controlgem.client.ControlGemClient"
     ]
   },
 

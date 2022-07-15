@@ -4,13 +4,15 @@ import net.minecraft.entity.attribute.EntityAttributeInstance;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.network.message.MessageType;
-import net.minecraft.scoreboard.*;
+import net.minecraft.scoreboard.Scoreboard;
+import net.minecraft.scoreboard.ScoreboardCriterion;
+import net.minecraft.scoreboard.ScoreboardObjective;
+import net.minecraft.scoreboard.ServerScoreboard;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.PlayerManager;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.world.GameMode;
 import org.mmga.controlgem.events.ServerWorldTickEvent;
@@ -32,6 +34,7 @@ public class PlayerJobThread extends Thread {
     private ServerPlayerEntity entity;
     private final String word;
     private int time;
+    private final int full_time;
     private boolean isFailed;
 
     public PlayerJobThread(ServerPlayerEntity entity, String word, int time, ServerPlayerEntity source) {
@@ -39,6 +42,7 @@ public class PlayerJobThread extends Thread {
         this.word = word;
         this.time = time;
         this.source = source;
+        this.full_time = time;
     }
 
     @Override
@@ -80,23 +84,12 @@ public class PlayerJobThread extends Thread {
     @Override
     public void run() {
         ServerWorldTickEvent.PLAYERS_JOBS.put(this.getEntity(), this);
-        MutableText titleText = Text.translatable("tip.controlgem.scoreboard.title");
         MinecraftServer server = entity.getServer();
         assert server != null;
         PlayerManager manager = server.getPlayerManager();
         Text name = entity.getName();
         String show = name.getString() + ":" + word;
         while (this.time != 0 && !isFailed) {
-            for (ServerPlayerEntity player : manager.getPlayerList()) {
-                Scoreboard scoreboard = player.getScoreboard();
-                ScoreboardObjective tasks = scoreboard.getObjective("tasks");
-                if (tasks == null) {
-                    tasks = scoreboard.addObjective("tasks", ScoreboardCriterion.DUMMY, titleText, ScoreboardCriterion.RenderType.INTEGER);
-                    scoreboard.setObjectiveSlot(Scoreboard.SIDEBAR_DISPLAY_SLOT_ID, tasks);
-                }
-                ScoreboardPlayerScore playerScore = scoreboard.getPlayerScore(show, tasks);
-                playerScore.setScore(time);
-            }
             try {
                 sleep(1000);
             } catch (InterruptedException e) {
@@ -127,13 +120,6 @@ public class PlayerJobThread extends Thread {
             serverScoreboard.setObjectiveSlot(Scoreboard.LIST_DISPLAY_SLOT_ID, scoreObjective);
         }
         for (ServerPlayerEntity player : manager.getPlayerList()) {
-            Scoreboard scoreboard = player.getScoreboard();
-            ScoreboardObjective tasks = scoreboard.getObjective("tasks");
-            if (tasks == null) {
-                tasks = scoreboard.addObjective("tasks", ScoreboardCriterion.DUMMY, titleText, ScoreboardCriterion.RenderType.INTEGER);
-                scoreboard.setObjectiveSlot(Scoreboard.SIDEBAR_DISPLAY_SLOT_ID, tasks);
-            }
-            scoreboard.resetPlayerScore(show, tasks);
             if (!isFailed) {
                 player.playSound(SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.VOICE, 1.0f, 1.0f);
             }
@@ -155,9 +141,22 @@ public class PlayerJobThread extends Thread {
         return entity;
     }
 
+    public String getWord() {
+        return word;
+    }
+
     public void setEntity(ServerPlayerEntity entity) {
         this.entity = entity;
     }
+
+    public int getFullTime() {
+        return full_time;
+    }
+
+    public int getTime() {
+        return time;
+    }
+
     public void failed() {
         this.isFailed = true;
         EntityAttributeInstance health = entity.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH);
